@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>edu.wisc.doit.code</groupId>
+        <artifactId>shared-tools-uw-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>NotificationPortlet</artifactId>
+    <version>13-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>Notification Portlet</name>
+    <description>This is the Notification Portlet</description>
+    
+    <properties>
+        <portlet.groupId>org.jasig.portlet.notification</portlet.groupId>
+        <portlet.artifactId>notification-portlet-webapp</portlet.artifactId>
+        <portlet.version>2.0.5</portlet.version>
+    </properties>
+    
+    <scm>
+        <connection>scm:git:git@github.com:UW-Madison-DoIT/NotificationPortlet-UWOverlay.git</connection>
+        <developerConnection>scm:git:git@github.com:UW-Madison-DoIT/NotificationPortlet-UWOverlay.git</developerConnection>
+        <url>https://github.com/UW-Madison-DoIT/NotificationPortlet-UWOverlay</url>
+      <tag>HEAD</tag>
+    </scm>
+    
+    <distributionManagement>
+        <repository>
+            <id>code.doit-uw-releases</id>
+            <name>code.doit-uw-releases</name>
+            <url>https://code.doit.wisc.edu/maven/content/repositories/uw-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>code.doit-uw-snapshots</id>
+            <name>code.doit-uw-snapshots</name>
+            <url>https://code.doit.wisc.edu/maven/content/repositories/uw-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    <repositories>
+        <repository>
+            <id>code.doit-public-releases</id>
+            <name>code.doit-public-releases</name>
+            <url>https://code.doit.wisc.edu/maven/content/repositories/public-releases</url>
+        </repository>
+        <repository>
+            <id>code.doit-public-snapshots</id>
+            <name>code.doit-public-snapshots</name>
+            <url>https://code.doit.wisc.edu/maven/content/repositories/public-snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>code.doit-uw-releases</id>
+            <name>code.doit-uw-releases</name>
+            <url>https://code.doit.wisc.edu/maven/content/repositories/uw-releases</url>
+        </repository>
+        <repository>
+            <id>code.doit-release-proxies</id>
+            <name>code.doit-release-proxies</name>
+            <url>https://code.doit.wisc.edu/maven/content/groups/release-proxies</url>
+        </repository>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- ===== Compile Time Dependencies ============================== -->
+        <dependency>
+            <groupId>${portlet.groupId}</groupId>
+            <artifactId>${portlet.artifactId}</artifactId>
+            <version>${portlet.version}</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jasig.mojo.jspc</groupId>
+                <artifactId>jspc-maven-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                        <version>2.4</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.portals.pluto</groupId>
+                <artifactId>maven-pluto-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
