@@ -90,6 +90,7 @@
     </dependencies>
     
     <build>
+        <finalName>NotificationPortlet</finalName>
         <plugins>
             <plugin>
                 <groupId>org.jasig.mojo.jspc</groupId>
