@@ -39,6 +39,7 @@
 
 <style type="text/css">
 #${n}notificationListView .hidden { display: none; }
+#${n}notificationListView .summary-template {text-align: right; border-top: 1px dotted black;}
 </style>
 
 <div id="${n}notificationListView" class="notification-list-view" style="display: none;">
@@ -53,6 +54,11 @@
             </div>
         </li>
     </ul>
+    
+    <div class="summary-template">
+        <portlet:renderURL var="maxWindowState" windowState="MAXIMIZED" />
+        Showing <span class="showing"></span> out of <span class="total"></span> <a href="${maxWindowState}">Show All Notifications</a>
+    </div>
 
 </div>
 
@@ -69,8 +75,14 @@
         upnotice.show($, container, { 
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>',
-            invokeActionUrlTemplate: '${invokeActionUrlTemplate}'
+            invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
+            numberToDisplay: 5
         });
+        
+        upnotice.pullFeed($, {
+            invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
+            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>'
+        },null);
 
     });
 
