@@ -63,27 +63,23 @@
 </div>
 
 <script type="text/javascript">
-
     var ${n} = ${n} || {};
     ${n}.jQuery = jQuery.noConflict(true);
-
-    ${n}.jQuery(function(){
-        var $ = ${n}.jQuery;
-
-        var container = $("#${n}notificationListView");
-
-        upnotice.show($, container, { 
-            invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
-            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>',
-            invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
-            numberToDisplay: 5
+    
+    ${n}.jQuery(document).ready(function(){
+        ${n}.jQuery(function(){
+            var $ = ${n}.jQuery;
+    
+            var container = $("#${n}notificationListView");
+    
+            upnotice.show($, container, { 
+                invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
+                getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>',
+                invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
+                numberToDisplay: 5
+            });
+            
         });
-        
-        upnotice.pullFeed($, {
-            invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
-            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>'
-        },null);
-
     });
 
 </script>
