@@ -1,25 +1,23 @@
+package edu.wisc.notification.web;
+
 import java.io.IOException;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
-import org.springframework.boot.*;
-import org.springframework.boot.autoconfigure.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@EnableAutoConfiguration
-public class Example {
-
+public class SampleController {
+    
     @RequestMapping("/")
-    String home() throws JsonGenerationException, JsonMappingException, IOException {
+    @ResponseBody
+    public String helloWorld() throws JsonGenerationException, JsonMappingException, IOException {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(new TestClass("Hello World"));
-    }
-
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(Example.class, args);
     }
     
     public class TestClass {
@@ -37,5 +35,4 @@ public class Example {
             this.test = test;
         }
     }
-
 }
