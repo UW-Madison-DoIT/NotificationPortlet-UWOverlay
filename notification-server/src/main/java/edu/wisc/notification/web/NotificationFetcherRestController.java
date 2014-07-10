@@ -30,7 +30,7 @@ public class NotificationFetcherRestController {
     @RequestMapping("/fetch")
     @ResponseBody
     public String fetchNotifications(HttpServletRequest request, @RequestParam String username, @RequestParam String groups) throws JsonGenerationException, JsonMappingException, IOException {
-        List<String> groupList = new ArrayList<String>(Arrays.asList(StringUtils.split(groups)));
+        List<String> groupList = new ArrayList<String>(Arrays.asList(StringUtils.split(groups,";")));
         
         //call service to get notifications that returns the notification response object
         NotificationResponse notifications = notificationService.getNotifications(username, groupList);
