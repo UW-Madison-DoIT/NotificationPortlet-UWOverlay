@@ -36,6 +36,7 @@ public class NotificationServiceImpl implements NotificationService{
             NotificationEntry ne = new NotificationEntry();
             ne.setId(notification.getId() != null? notification.getId().toString() : null);
             ne.setBody(notification.getNotificationText());
+            ne.setTitle(notification.getNotificationText());
             notificationEntries.add(ne);
         }
         notificationCategory.addEntries(notificationEntries);
