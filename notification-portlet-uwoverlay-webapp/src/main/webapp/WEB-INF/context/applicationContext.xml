@@ -127,11 +127,13 @@
                         <property name="userAttributeKey" value="user.login.id"/>
                     </bean>
                 </entry>
+		<!-- START MODIFICATIONS for UW -->
                 <entry key="groups">
                     <bean class="org.jasig.portlet.notice.service.rest.UserAttributeParameterEvaluator">
                         <property name="userAttributeKey" value="ismemberof"/>
                     </bean>
                 </entry>
+		<!-- END MODIFICATIONS for UW -->
             </util:map>
         </property>
         <property name="restTemplate">
