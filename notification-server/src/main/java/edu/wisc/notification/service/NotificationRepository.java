@@ -14,5 +14,8 @@ interface NotificationRepository extends Repository<Notification, Long>{
     @Query("SELECT n FROM Notification n JOIN n.groups g where g.groupName = :group")
     Set<Notification> findByGroup(@Param(value = "group") String group);
     
+    @Query("SELECT n FROM Notification n JOIN n.users u where u.userName = :user")
+    Set<Notification> findByUser(@Param(value = "user") String username);
+    
     Notification save(Notification notification);
 }

@@ -22,7 +22,10 @@ public class Notification implements Serializable {
     private String notificationText;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "notification")
-    private Set<NotificationGroup> groups; 
+    private Set<NotificationGroup> groups;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "notification")
+    private Set<NotificationUser> users;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "notification")
     private Set<NotificationStatus> statuses;
@@ -51,5 +54,9 @@ public class Notification implements Serializable {
 
     public Set<NotificationStatus> getStatuses() {
         return statuses;
+    }
+
+    public Set<NotificationUser> getUsers() {
+        return users;
     }
 }

@@ -2,6 +2,7 @@ package edu.wisc.notification.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.jasig.portlet.notice.NotificationCategory;
@@ -20,11 +21,21 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public NotificationResponse getNotifications(String username, List<String> groups) {
         List <Notification> notifications = new ArrayList<Notification>();
+        notifications.addAll(getNotificationsByGroup(username, groups));
+        notifications.addAll(getNotificationsByUser(username));
+        return transformNotificationListToResponse(notifications);
+    }
+    
+    private Collection<? extends Notification> getNotificationsByUser(String username) {
+        return notificationRepository.findByUser(username);
+    }
+
+    private List<Notification> getNotificationsByGroup(String username, List<String> groups) {
+        List <Notification> notifications = new ArrayList<Notification>();
         for(String group : groups) {
             notifications.addAll(notificationRepository.findByGroup(group));
         }
-        
-        return transformNotificationListToResponse(notifications);
+        return notifications;
     }
     
     private NotificationResponse transformNotificationListToResponse(List<Notification> notifications) {
