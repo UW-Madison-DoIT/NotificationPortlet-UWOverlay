@@ -12,7 +12,6 @@ import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import edu.wisc.notification.domain.Notification;
 import edu.wisc.notification.domain.NotificationStatus;
@@ -27,20 +26,35 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Override
     public NotificationResponse getNotifications(String username, List<String> groups) {
+        return getNotifications(username, groups, false);
+    }
+    
+    @Override
+    public NotificationResponse getAllNotifications(String username, List<String> groups) {
+        return getNotifications(username, groups, true);
+    }
+    
+    private NotificationResponse getNotifications(String username, List<String> groups, boolean withRead) {
         List <Notification> notifications = new ArrayList<Notification>();
-        notifications.addAll(getNotificationsByGroup(username, groups));
-        notifications.addAll(getNotificationsByUser(username));
+        notifications.addAll(getNotificationsByGroup(username, groups, withRead));
+        notifications.addAll(getNotificationsByUser(username, withRead));
         return transformNotificationListToResponse(notifications);
     }
     
-    private Collection<? extends Notification> getNotificationsByUser(String username) {
-        return notificationRepository.findByUser(username);
+    private Collection<? extends Notification> getNotificationsByUser(String username, boolean withRead) {
+        if(withRead)
+            return notificationRepository.findByUser(username);
+        else
+            return notificationRepository.findByUserNoRead(username);
     }
 
-    private List<Notification> getNotificationsByGroup(String username, List<String> groups) {
+    private List<Notification> getNotificationsByGroup(String username, List<String> groups, boolean withRead) {
         List <Notification> notifications = new ArrayList<Notification>();
         for(String group : groups) {
-            notifications.addAll(notificationRepository.findByGroup(group));
+            if(withRead)
+                notifications.addAll(notificationRepository.findByGroup(group));
+            else
+                notifications.addAll(notificationRepository.findByGroupNoRead(group));
         }
         return notifications;
     }
@@ -54,19 +68,19 @@ public class NotificationServiceImpl implements NotificationService{
             for(NotificationStatus status: notification.getStatuses()) {
                 if(status.getUsername().equalsIgnoreCase(username)) {
                     if(status.getStatus().equals(NotificationStatus.Status.READ)) {
-                        return 0;
+                        return 0;//found it and its already read
                     }
                     status.setStatus(NotificationStatus.Status.READ);
                     notificationStatusRepository.save(status);
                     notificationRepository.save(notification);
-                    return 1;
+                    return 1;//found it and updated
                 }
             }
             NotificationStatus status = new NotificationStatus(notification, username, NotificationStatus.Status.READ);
             notification.getStatuses().add(status);
             notificationStatusRepository.save(status);
             notificationRepository.save(notification);
-            return 1;
+            return 1;//didn't find it so creating
         }
         return 0; //didn't find it
     }
@@ -89,5 +103,10 @@ public class NotificationServiceImpl implements NotificationService{
         nr.setCategories(Arrays.asList(notificationCategory));
         
         return nr;
+    }
+
+    @Override
+    public Notification save(Notification n) {
+        return notificationRepository.save(n);
     }
 }

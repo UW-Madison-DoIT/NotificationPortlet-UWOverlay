@@ -17,5 +17,11 @@ interface NotificationRepository extends Repository<Notification, Long>{
     @Query("SELECT n FROM Notification n JOIN n.users u where u.userName = :user")
     Set<Notification> findByUser(@Param(value = "user") String username);
     
+    @Query("SELECT n FROM Notification n JOIN n.users u LEFT JOIN n.statuses s where u.userName = :user and (s.status is null or s.status != 'READ')")
+    Set<Notification> findByUserNoRead(@Param(value = "user") String username);
+    
+    @Query("SELECT n FROM Notification n JOIN n.groups g LEFT JOIN n.statuses s where g.groupName = :group and (s.status is null or s.status != 'READ')")
+    Set<Notification> findByGroupNoRead(@Param(value = "group") String group);
+    
     Notification save(Notification notification);
 }
