@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -14,11 +16,13 @@ public class NotificationStatus implements Serializable {
 
     public enum Status { READ,UNREAD }
     
-    @Id
     @ManyToOne(optional = false)
     private Notification notification;
     
-    @Id 
+    @Id @GeneratedValue
+    private Long notificationStatusId;
+    
+    @Column(nullable = false)
     private String username;
     
     @Column (name = "STATUS", nullable = false)
@@ -55,4 +59,9 @@ public class NotificationStatus implements Serializable {
     public void setStatus(Status status) {
         this.status = status.toString();
     }
+
+    public Long getNotificationStatusId() {
+        return notificationStatusId;
+    }
+
 }
