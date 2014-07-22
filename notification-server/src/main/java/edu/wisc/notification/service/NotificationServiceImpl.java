@@ -18,6 +18,13 @@ import edu.wisc.notification.domain.NotificationStatus;
 
 @Service
 public class NotificationServiceImpl implements NotificationService{
+    
+    private enum StateFilter {
+        READ_ONLY,
+        ALL,
+        UNREAD_ONLY
+    }
+    
     @Autowired
     private NotificationRepository notificationRepository;
     
@@ -26,35 +33,44 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Override
     public NotificationResponse getNotifications(String username, List<String> groups) {
-        return getNotifications(username, groups, false);
+        return getNotifications(username, groups, StateFilter.UNREAD_ONLY);
     }
     
     @Override
     public NotificationResponse getAllNotifications(String username, List<String> groups) {
-        return getNotifications(username, groups, true);
+        return getNotifications(username, groups, StateFilter.ALL);
     }
     
-    private NotificationResponse getNotifications(String username, List<String> groups, boolean withRead) {
+    @Override
+    public NotificationResponse getOnlyReadNotifications(String username, List<String> groups) {
+        return getNotifications(username, groups, StateFilter.READ_ONLY);
+    }
+    
+    private NotificationResponse getNotifications(String username, List<String> groups, StateFilter states) {
         List <Notification> notifications = new ArrayList<Notification>();
-        notifications.addAll(getNotificationsByGroup(username, groups, withRead));
-        notifications.addAll(getNotificationsByUser(username, withRead));
+        notifications.addAll(getNotificationsByGroup(username, groups, states));
+        notifications.addAll(getNotificationsByUser(username, states));
         return transformNotificationListToResponse(notifications);
     }
     
-    private Collection<? extends Notification> getNotificationsByUser(String username, boolean withRead) {
-        if(withRead)
-            return notificationRepository.findByUser(username);
-        else
-            return notificationRepository.findByUserNoRead(username);
+    private Collection<? extends Notification> getNotificationsByUser(String username, StateFilter state) {
+        switch (state) {
+            case READ_ONLY : return notificationRepository.findByUserOnlyRead(username);
+            case ALL : return notificationRepository.findByUser(username);
+            case UNREAD_ONLY : return notificationRepository.findByUserNoRead(username);
+            default : throw new IllegalArgumentException("Invalid state passed in");
+        }
     }
 
-    private List<Notification> getNotificationsByGroup(String username, List<String> groups, boolean withRead) {
+    private List<Notification> getNotificationsByGroup(String username, List<String> groups, StateFilter state) {
         List <Notification> notifications = new ArrayList<Notification>();
         for(String group : groups) {
-            if(withRead)
-                notifications.addAll(notificationRepository.findByGroup(group));
-            else
-                notifications.addAll(notificationRepository.findByGroupNoRead(group));
+            switch (state) {
+                case READ_ONLY : notifications.addAll(notificationRepository.findByGroupOnlyRead(group)); break;
+                case ALL : notifications.addAll(notificationRepository.findByGroup(group)); break;
+                case UNREAD_ONLY : notifications.addAll(notificationRepository.findByGroupNoRead(group)); break;
+                default : throw new IllegalArgumentException("Invalid state passed in");
+            }
         }
         return notifications;
     }

@@ -8,30 +8,46 @@ import edu.wisc.notification.domain.Notification;
 
 public interface NotificationService {
     
-    /*
-     * Gets a list of notifications based on groups and based on the username. 
-     * It then translate them to a NotificationResponse object that contains a
-     * category that contains entries for the notifications. This was structured 
-     * to communicate with the notification portlet directly. This omits READ
-     * notifications
+    /**
+     * Get a list of all UNREAD notifications
+     * @param username
+     * @param groups
+     * @return Returns a Notification response object with a single category
      */
     public NotificationResponse getNotifications(String username, List<String>groups);
     
-    /*
-     * Gets a list of notifications based on groups and based on the username. 
-     * It then translate them to a NotificationResponse object that contains a
-     * category that contains entries for the notifications. This was structured 
-     * to communicate with the notification portlet directly. This contains all 
-     * notifications regardless of state
+    /**
+     * Get a list of all notifications regardless of state
+     * @param username
+     * @param groups
+     * @return Returns a Notification response object with a single category
      */
     public NotificationResponse getAllNotifications(String username, List<String> groups);
     
-    /*
-     * This is to mark a notification as read.
+    /**
+     * Get a list of all READ notifications
+     * @param username
+     * @param groups
+     * @return Returns a Notification response object with a single category
+     */
+    public NotificationResponse getOnlyReadNotifications(String username, List<String> groups);
+    
+    /**
+     * Makes a notification read by a user
+     * @param username
+     * @param notificationId
+     * @return returns how many updates were made, 0 or 1
      */
     public int updateNotificationAsRead(String username, Long notificationId);
     
+    /**
+     * It does exactly what you think it does
+     * @param n
+     * @return
+     */
     public Notification save(Notification n);
+
+    
 
     
 }
