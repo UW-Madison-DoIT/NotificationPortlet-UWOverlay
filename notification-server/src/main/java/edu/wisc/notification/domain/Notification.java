@@ -1,6 +1,7 @@
 package edu.wisc.notification.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -22,13 +23,13 @@ public class Notification implements Serializable {
     private String notificationText;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "notification")
-    private Set<NotificationGroup> groups;
+    private Set<NotificationGroup> groups = new HashSet<NotificationGroup>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "notification")
-    private Set<NotificationUser> users;
+    private Set<NotificationUser> users = new HashSet<NotificationUser>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "notification")
-    private Set<NotificationStatus> statuses;
+    private Set<NotificationStatus> statuses = new HashSet<NotificationStatus>();
     
     protected Notification() {}
     
