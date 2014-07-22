@@ -19,7 +19,7 @@
     <properties>
         <portlet.groupId>org.jasig.portlet.notification</portlet.groupId>
         <portlet.artifactId>notification-portlet-webapp</portlet.artifactId>
-        <portlet.version>2.0.6</portlet.version>
+        <portlet.version>2.0.7</portlet.version>
         <jackson.version>1.9.11</jackson.version>
     </properties>
     
