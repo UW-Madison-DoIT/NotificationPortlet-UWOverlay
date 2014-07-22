@@ -20,7 +20,7 @@ import edu.wisc.notification.domain.NotificationGroup;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = NotificationServerApplication.class)
 @WebAppConfiguration
-public class NotificationServiceTest {
+public class NotificationServiceIT {
 
     @Autowired
     NotificationService ns;
