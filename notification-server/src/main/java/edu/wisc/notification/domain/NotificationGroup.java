@@ -13,14 +13,22 @@ public class NotificationGroup implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
-    @Id
+    @Id @GeneratedValue
+    private Long id;
+    
     @ManyToOne(optional = false)
     private Notification notification;
     
-    @Id
     @Column (name = "GRP_NAME")
     private String groupName;
-
+    
+    protected NotificationGroup(){}
+    
+    public NotificationGroup(String gName, Notification notification) {
+        this.notification = notification;
+        groupName = gName;
+    }
+    
     public Notification getNotification() {
         return notification;
     }
