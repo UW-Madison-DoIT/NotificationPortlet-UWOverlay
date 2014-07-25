@@ -53,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService{
         List <Notification> notifications = new ArrayList<Notification>();
         notifications.addAll(getNotificationsByGroup(username, groups, states));
         notifications.addAll(getNotificationsByUser(username, states));
-        return transformNotificationListToResponse(notifications);
+        return transformNotificationListToResponse(notifications, username);
     }
     
     private Collection<? extends Notification> getNotificationsByUser(String username, StateFilter state) {
@@ -105,7 +105,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
     
     
-    private NotificationResponse transformNotificationListToResponse(List<Notification> notifications) {
+    private NotificationResponse transformNotificationListToResponse(List<Notification> notifications, String userName) {
         NotificationResponse nr = new NotificationResponse();
         NotificationCategory notificationCategory = new NotificationCategory();
         notificationCategory.setTitle("Default Category");
@@ -115,18 +115,15 @@ public class NotificationServiceImpl implements NotificationService{
             ne.setId(notification.getId() != null? notification.getId().toString() : null);
             ne.setBody(notification.getNotificationText());
             ne.setTitle(notification.getNotificationText());
+            
             NotificationAttribute readAttribute = new NotificationAttribute();
-            Set<NotificationStatus> status = notification.getStatuses();
-            Iterator<NotificationStatus> statuses = status.iterator();
-            while(statuses.hasNext()){
-                NotificationStatus.Status myStatus = statuses.next().getStatus();
-                switch(myStatus) {
-                    case READ:
-                    case UNREAD:
-                        String readStatus = NotificationStatus.Status.READ.toString();
-                        readAttribute.setName(readStatus);
-                        readAttribute.setValues(Arrays.asList((new Boolean(readStatus.equals(myStatus.toString())).toString())));
-                        break;
+            readAttribute.setName("READ");
+            NotificationStatus notificationStatus = notificationRepository.findStatus(userName, notification);
+            if(notificationStatus!=null){
+                NotificationStatus.Status statusValue = notificationStatus.getStatus();
+                if(NotificationStatus.Status.READ.equals(statusValue)){
+                    //If Status is read - set read attribute to true
+                    readAttribute.setValues(Arrays.asList((new Boolean(true)).toString()));
                 }
             }
             List<NotificationAttribute> attributeList = new ArrayList<NotificationAttribute>();

@@ -28,7 +28,7 @@ public class Notification implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "notification")
     private Set<NotificationUser> users = new HashSet<NotificationUser>();
     
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "notification")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "notification")
     private Set<NotificationStatus> statuses = new HashSet<NotificationStatus>();
     
     protected Notification() {}

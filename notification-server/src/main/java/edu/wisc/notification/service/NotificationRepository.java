@@ -7,6 +7,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import edu.wisc.notification.domain.Notification;
+import edu.wisc.notification.domain.NotificationStatus;
 
 interface NotificationRepository extends Repository<Notification, Long>{
     Notification findById(Long id);
@@ -28,6 +29,9 @@ interface NotificationRepository extends Repository<Notification, Long>{
     
     @Query("SELECT n FROM Notification n JOIN n.groups g LEFT JOIN n.statuses s where g.groupName = :group and s.status = 'READ'")
     Set<Notification> findByGroupOnlyRead(@Param(value = "group") String group);
+    
+    @Query("SELECT ns FROM NotificationStatus ns JOIN ns.notification n where ns.username = :user and ns.notification = :notification")
+    NotificationStatus findStatus(@Param(value = "user") String username, @Param(value = "notification") Notification notification);
     
     Notification save(Notification notification);
 }
