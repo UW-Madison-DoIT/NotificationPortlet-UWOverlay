@@ -3,10 +3,13 @@ package edu.wisc.notification.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.jasig.portlet.notice.NotificationAttribute;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
@@ -112,6 +115,23 @@ public class NotificationServiceImpl implements NotificationService{
             ne.setId(notification.getId() != null? notification.getId().toString() : null);
             ne.setBody(notification.getNotificationText());
             ne.setTitle(notification.getNotificationText());
+            NotificationAttribute readAttribute = new NotificationAttribute();
+            Set<NotificationStatus> status = notification.getStatuses();
+            Iterator<NotificationStatus> statuses = status.iterator();
+            while(statuses.hasNext()){
+                NotificationStatus.Status myStatus = statuses.next().getStatus();
+                switch(myStatus) {
+                    case READ:
+                    case UNREAD:
+                        String readStatus = NotificationStatus.Status.READ.toString();
+                        readAttribute.setName(readStatus);
+                        readAttribute.setValues(Arrays.asList((new Boolean(readStatus.equals(myStatus.toString())).toString())));
+                        break;
+                }
+            }
+            List<NotificationAttribute> attributeList = new ArrayList<NotificationAttribute>();
+            attributeList.add(readAttribute);
+            ne.setAttributes(attributeList);
             notificationEntries.add(ne);
         }
         notificationCategory.addEntries(notificationEntries);
