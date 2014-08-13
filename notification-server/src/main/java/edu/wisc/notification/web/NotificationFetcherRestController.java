@@ -26,16 +26,38 @@ public class NotificationFetcherRestController {
     
     @Autowired
     private NotificationService notificationService;
+    private final String GROUPSEPERATORCHARS = ";";
     
     @RequestMapping("/fetch")
     @ResponseBody
     public String fetchNotifications(HttpServletRequest request, @RequestParam String username, @RequestParam String groups) throws JsonGenerationException, JsonMappingException, IOException {
-        List<String> groupList = new ArrayList<String>(Arrays.asList(StringUtils.split(groups,";")));
-        
         //call service to get notifications that returns the notification response object
-        NotificationResponse notifications = notificationService.getNotifications(username, groupList);
-        
+        NotificationResponse notifications = notificationService.getAllNotifications(username, splitGroups(groups));
+        return notificationsToJson(notifications);
+    }
+    
+    @RequestMapping("/fetchRead")
+    @ResponseBody
+    public String fetchReadNotifications(HttpServletRequest request, @RequestParam String username, @RequestParam String groups) throws JsonGenerationException, JsonMappingException, IOException {
+        //call service to get read notifications that returns the notification response object
+        NotificationResponse notifications = notificationService.getOnlyReadNotifications(username, splitGroups(groups));
+        return notificationsToJson(notifications);
+    }
+    
+    @RequestMapping("/fetchUnread")
+    @ResponseBody
+    public String fetchUnreadNotifications(HttpServletRequest request, @RequestParam String username, @RequestParam String groups) throws JsonGenerationException, JsonMappingException, IOException {
+        //call service to get unread notifications that returns the notification response object
+        NotificationResponse notifications = notificationService.getNotifications(username, splitGroups(groups));
+        return notificationsToJson(notifications);
+    }
+    
+    private List<String> splitGroups(String groups){
+        return new ArrayList<String>(Arrays.asList(StringUtils.split(groups, GROUPSEPERATORCHARS)));
+    }
+    
+    private String notificationsToJson(NotificationResponse response) throws JsonGenerationException, JsonMappingException, IOException{
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        return ow.writeValueAsString(notifications);
+        return ow.writeValueAsString(response);
     }
 }

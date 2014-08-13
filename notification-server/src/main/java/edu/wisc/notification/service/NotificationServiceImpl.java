@@ -3,10 +3,13 @@ package edu.wisc.notification.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.jasig.portlet.notice.NotificationAttribute;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
@@ -50,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService{
         List <Notification> notifications = new ArrayList<Notification>();
         notifications.addAll(getNotificationsByGroup(username, groups, states));
         notifications.addAll(getNotificationsByUser(username, states));
-        return transformNotificationListToResponse(notifications);
+        return transformNotificationListToResponse(notifications, username);
     }
     
     private Collection<? extends Notification> getNotificationsByUser(String username, StateFilter state) {
@@ -102,7 +105,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
     
     
-    private NotificationResponse transformNotificationListToResponse(List<Notification> notifications) {
+    private NotificationResponse transformNotificationListToResponse(List<Notification> notifications, String userName) {
         NotificationResponse nr = new NotificationResponse();
         NotificationCategory notificationCategory = new NotificationCategory();
         notificationCategory.setTitle("Default Category");
@@ -112,6 +115,20 @@ public class NotificationServiceImpl implements NotificationService{
             ne.setId(notification.getId() != null? notification.getId().toString() : null);
             ne.setBody(notification.getNotificationText());
             ne.setTitle(notification.getNotificationText());
+            
+            NotificationAttribute readAttribute = new NotificationAttribute();
+            readAttribute.setName("READ");
+            NotificationStatus notificationStatus = notificationRepository.findStatus(userName, notification);
+            if(notificationStatus!=null){
+                NotificationStatus.Status statusValue = notificationStatus.getStatus();
+                if(NotificationStatus.Status.READ.equals(statusValue)){
+                    //If Status is read - set read attribute to true
+                    readAttribute.setValues(Arrays.asList((new Boolean(true)).toString()));
+                }
+            }
+            List<NotificationAttribute> attributeList = new ArrayList<NotificationAttribute>();
+            attributeList.add(readAttribute);
+            ne.setAttributes(attributeList);
             notificationEntries.add(ne);
         }
         notificationCategory.addEntries(notificationEntries);
