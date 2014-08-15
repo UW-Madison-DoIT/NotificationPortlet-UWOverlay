@@ -57,6 +57,12 @@
     line-height:1em;
     border:1px solid #b70101;
 }
+#${n}notificationIcon .notification-badge:hover {
+  background-color: #fff;
+}
+#${n}notificationIcon a:hover {
+  text-decoration:none;
+}
 #${n}notificationIcon .no-new {
     background-color:#b70101;
     color:#f7f5e8;
@@ -70,9 +76,8 @@ span.notification-count {
 
 <div id="${n}notificationIcon">
     <a href="${url}" title="<spring:message code="view.notifications"/>">
-
+      <div class="notification-badge" style="display: none;"><span class="notification-count"></span></div>
     </a>
-    <div class="notification-badge" style="display: none;"><span class="notification-count"></span></div>
 </div>
 
 <script type="text/javascript">
